@@ -8,6 +8,7 @@
   "dependencies": {
     "segmentio/facade": "1.x",
     "segmentio/alias": "0.2.1",
+    "ndhoule/extend": "^1.0.1",
     "jashkenas/underscore": "*",
     "segmentio/analytics.js-integration": "^1.0.0"
   },
