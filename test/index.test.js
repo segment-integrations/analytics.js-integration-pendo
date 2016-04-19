@@ -36,7 +36,6 @@ describe('Pendo', function() {
   it('should have the right settings', function() {
     analytics.compare(Pendo,
       integration('Pendo')
-        .readyOnLoad()
         .global('pendo')
         .option('apiKey', '')
     );
@@ -44,23 +43,28 @@ describe('Pendo', function() {
 
   describe('before loading', function() {
     beforeEach(function() {
-      analytics.spy(pendo, 'load');
+      analytics.stub(pendo, 'load');
     });
 
-    afterEach(function() {
-      pendo.reset();
-    });
+    // afterEach(function() {
+    //   pendo.reset();
+    // });
 
     describe('#initialize', function() {
-      beforeEach(function() {
+    //   beforeEach(function() {
+    //     analytics.initialize();
+    //     // analytics.page();
+    //   });
+      it('should create window.pendo_options', function() {
+        analytics.assert(!window.pendo_options);
         analytics.initialize();
-        // analytics.page();
+        analytics.assert(window.pendo_options);
       });
 
       it('should create a pendo_options object using API', function() {
         analytics.assert.deepEqual(window.pendo_options, {
-            apiKey: options.apiKey,
-            usePendoAgentAPI: true
+          apiKey: options.apiKey,
+          usePendoAgentAPI: true
         });
       });
 
@@ -68,9 +72,9 @@ describe('Pendo', function() {
         analytics.called(pendo.load);
       });
 
-    //   it('should be ready', function() {
-    //     analytics.called(pendo.ready);
-    //   });
+      it('should be ready', function() {
+        analytics.called(pendo.ready);
+      });
     });
   });
 
@@ -91,32 +95,6 @@ describe('Pendo', function() {
     //
     //     analytics.assert.deepEqual({ uid: 'id' }, window.chmln.identify_a[0][0]);
     //   });
-    });
-
-    describe('on alias', function() {
-      describe('with the new id', function() {
-        beforeEach(function() {
-          analytics.alias('new');
-        });
-
-    //     it('should store the alias', function() {
-    //       analytics.assert(window.chmln.alias_a[0].length === 1);
-      //
-    //       analytics.assert.deepEqual({ from: 'anon-id', to: 'new' }, window.chmln.alias_a[0][0]);
-    //     });
-      });
-
-      describe('with the both old and new id', function() {
-        beforeEach(function() {
-          analytics.alias('new', 'old');
-        });
-
-    //     it('should store the alias', function() {
-    //       analytics.assert(window.chmln.alias_a[0].length === 1);
-
-    //       analytics.assert.deepEqual({ from: 'old', to: 'new' }, window.chmln.alias_a[0][0]);
-    //     });
-      });
     });
   });
 
