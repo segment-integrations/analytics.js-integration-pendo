@@ -1,4 +1,4 @@
-# analytics.js-integration-chameleon [![Build Status][ci-badge]][ci-link]
+# analytics.js-integration-pendo [![Build Status][ci-badge]][ci-link]
 
 Pendo integration for [Analytics.js][].
 
