@@ -54,6 +54,9 @@ distclean: clean
 build.js: node_modules component.json $(SRCS) $(TESTS)
 	@$(DUO) --stdout --development $(TESTS) > $@
 
+build-local: node_modules component.json $(SRCS)
+	@$(DUO) --stdout --development dev/test.js > dev/local.build.js
+
 # Build shortcut.
 build: build.js
 .DEFAULT_GOAL = build
