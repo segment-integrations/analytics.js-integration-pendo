@@ -3,3 +3,5 @@
 build.js
 components
 node_modules
+dev
+local.build.js
