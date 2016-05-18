@@ -15,3 +15,8 @@ charset = utf-8
 indent_style = space
 trim_trailing_whitespace = true
 indent_brace_style = K&R
+
+# Indentation override for all JS under lib directory
+[Makefile]
+charset = utf-8
+indent_style = tab
