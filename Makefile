@@ -58,24 +58,24 @@ build.js: node_modules component.json $(SRCS) $(TESTS)
 # Builds a version that injects the dev cdn value
 stage-dev-build: clean
 	mkdir -p .dist
-	cp lib/index.js index.dev.tmp.js
-	sed -i '' -e 's/var client_host.*/var client_host = \"pendo-dev-static.storage.googleapis.com\";/g' index.dev.tmp.js
-	sed -i '' -e 's/var client_file.*/var client_file = \"\/js\/pa.js\";/g' index.dev.tmp.js
+	cp lib/index.js pendo-analytics.js
+	sed -i '' -e 's/var client_host.*/var client_host = \"pendo-dev-static.storage.googleapis.com\";/g' pendo-analytics.js
+	sed -i '' -e 's/var client_file.*/var client_file = \"\/js\/pa.js\";/g' pendo-analytics.js
 
 build-dev: stage-dev-build
-	@$(DUO) --stdout --development index.dev.tmp.js > .dist/analytics.dev.js
-	rm -f index.dev.tmp.js
+	@$(DUO) --stdout --development local/local-test.js > .dist/analytics.dev.js
+	rm -f pendo-analytics.js
 
 # Builds a version that injects the dev cdn value
 stage-dev-local: clean
 	mkdir -p .dist
-	cp lib/index.js index.dev.tmp.js
-	sed -i '' -e 's/var client_host.*/var client_host = \"pendo-devserver-static.storage.googleapis.com\";/g' index.dev.tmp.js
-	sed -i '' -e 's/var client_file.*/var client_file = \"\/js\/pa.js\";/g' index.dev.tmp.js
+	cp lib/index.js pendo-analytics.js
+	sed -i '' -e 's/var client_host.*/var client_host = \"pendo-devserver-static.storage.googleapis.com\";/g' pendo-analytics.js
+	sed -i '' -e 's/var client_file.*/var client_file = \"\/js\/pa.js\";/g' pendo-analytics.js
 
 build-local: stage-dev-local
-	@$(DUO) --stdout --development index.dev.tmp.js > .dist/analytics.local.js
-	rm -f index.dev.tmp.js
+	@$(DUO) --stdout --development local/local-test.js > .dist/analytics.local.js
+	rm -f pendo-analytics.js
 
 # Build shortcut.
 build: build.js
@@ -97,10 +97,7 @@ test-phantomjs: node_modules build.js
 .PHONY: test
 
 # Builds a variant that can be used for local testing as a client
-test-local: node_modules component.json $(SRCS) 
-	mkdir -p .dist 	
-	@$(DUO) --stdout --development local/local-test.js > .dist/local.build.js
-.PHONY: test
+test-local: build-local
 
 # Test locally in the browser.
 test-browser: node_modules build.js
