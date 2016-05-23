@@ -38,6 +38,7 @@ node_modules: package.json $(wildcard node_modules/*/package.json)
 
 # Remove temporary files and build artifacts.
 clean:
+	rm -rf .dist	
 	rm -rf build.js
 .PHONY: clean
 
@@ -53,6 +54,28 @@ distclean: clean
 # Build all integrations, tests, and dependencies together for testing.
 build.js: node_modules component.json $(SRCS) $(TESTS)
 	@$(DUO) --stdout --development $(TESTS) > $@
+
+# Builds a version that injects the dev cdn value
+stage-dev-build: clean
+	mkdir -p .dist
+	cp lib/index.js pendo-analytics.js
+	sed -i '' -e 's/var client_host.*/var client_host = \"pendo-dev-static.storage.googleapis.com\";/g' pendo-analytics.js
+	sed -i '' -e 's/var client_file.*/var client_file = \"\/js\/pa.js\";/g' pendo-analytics.js
+
+build-dev: stage-dev-build
+	@$(DUO) --stdout --development local/local-test.js > .dist/analytics.dev.js
+	rm -f pendo-analytics.js
+
+# Builds a version that injects the dev cdn value
+stage-dev-local: clean
+	mkdir -p .dist
+	cp lib/index.js pendo-analytics.js
+	sed -i '' -e 's/var client_host.*/var client_host = \"pendo-devserver-static.storage.googleapis.com\";/g' pendo-analytics.js
+	sed -i '' -e 's/var client_file.*/var client_file = \"\/js\/pa.js\";/g' pendo-analytics.js
+
+build-local: stage-dev-local
+	@$(DUO) --stdout --development local/local-test.js > .dist/analytics.local.js
+	rm -f pendo-analytics.js
 
 # Build shortcut.
 build: build.js
@@ -72,6 +95,9 @@ test-phantomjs: node_modules build.js
 	@$(DUOT) phantomjs $(TESTS_DIR) args: \
 		--path node_modules/.bin/phantomjs
 .PHONY: test
+
+# Builds a variant that can be used for local testing as a client
+test-local: build-local
 
 # Test locally in the browser.
 test-browser: node_modules build.js

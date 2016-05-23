@@ -1,0 +1,22 @@
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+[*.{html,js}]
+indent_size = 2
+
+# Indentation override for all JS under lib directory
+[*.js]
+charset = utf-8
+indent_style = space
+trim_trailing_whitespace = true
+indent_brace_style = K&R
+
+# Indentation override for all JS under lib directory
+[Makefile]
+charset = utf-8
+indent_style = tab
