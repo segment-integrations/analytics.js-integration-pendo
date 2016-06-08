@@ -5,3 +5,4 @@ components
 node_modules
 .dist
 local
+*docs.md
