@@ -1,8 +1,2 @@
-*.log
-.DS_Store
-build.js
-components
+coverage
 node_modules
-.dist
-local
-*docs.md

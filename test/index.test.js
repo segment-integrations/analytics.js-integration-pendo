@@ -1,12 +1,10 @@
 'use strict';
 
-var Analytics = require('analytics.js-core').constructor;
-var integration = require('analytics.js-integration');
-var sandbox = require('clear-env');
-var tester = require('analytics.js-integration-tester');
-var Pendo = require('../lib/');
-
-// var noop = function() {};
+var Analytics = require('@segment/analytics.js-core').constructor;
+var Pendo = require('../lib');
+var integration = require('@segment/analytics.js-integration');
+var sandbox = require('@segment/clear-env');
+var tester = require('@segment/analytics.js-integration-tester');
 
 describe('Pendo', function() {
   var analytics;
