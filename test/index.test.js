@@ -20,7 +20,7 @@ describe('Pendo', function() {
     analytics.use(Pendo);
     analytics.use(tester);
     analytics.add(pendo);
-    analytics.user();
+    analytics.user();     
   });
 
   afterEach(function() {
@@ -28,15 +28,16 @@ describe('Pendo', function() {
     analytics.reset();
     pendo.reset();
     analytics.user().reset();
+    analytics.group().reset();
     sandbox();
   });
 
   it('should have the right settings', function() {
     analytics.compare(Pendo,
-      integration('Pendo')
-        .global('pendo')
-        .option('apiKey', '')
-    );
+            integration('Pendo')
+                .global('pendo')
+                .option('apiKey', '')
+        );
   });
 
   describe('before loading', function() {
@@ -65,20 +66,31 @@ describe('Pendo', function() {
 
   describe('after loading', function() {
     beforeEach(function(done) {
-      analytics.once('ready', done);
-      analytics.initialize();
-      analytics.page();
+      // override the agent loaded message
+      window.self = window.top = {};
+      analytics.once('ready', function() {
+        analytics.stub(window.pendo,'tellMaster', function() {
+          // noop
+        });
+        analytics.stub(window.pendo,'listenToMaster', function() {
+          // noop
+        });        
+        done();
+      });
+      analytics.initialize();  
     });
 
     describe('#identify', function() {
       beforeEach(function() {
         analytics.spy(window.pendo, 'identify');
+        analytics.stub(window.pendo, 'tellMaster');
       });
 
       it('should identify with the anonymous user id', function() {
         analytics.identify();
         analytics.called(window.pendo.identify);
-        analytics.assert(window.pendo.getVisitorId().indexOf('_PENDO_T_') !== -1);
+
+        analytics.assert(window.pendo.visitorId.indexOf('_PENDO_T_') !== -1);
       });
 
       it('should identify with the given id', function() {
@@ -102,7 +114,18 @@ describe('Pendo', function() {
     });
 
     describe('#group', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
+        analytics.once('ready', function() {
+          analytics.stub(window.pendo,'tellMaster', function() {
+              // noop
+          });
+          analytics.stub(window.pendo,'listenToMaster', function() {
+              // noop
+          });
+          window.pendo.stopSendingEvents();
+          done();
+        });
+        analytics.initialize();  
         analytics.spy(window.pendo, 'identify');
       });
 
