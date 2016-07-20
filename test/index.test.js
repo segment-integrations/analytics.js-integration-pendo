@@ -1,12 +1,10 @@
 'use strict';
 
-var Analytics = require('analytics.js-core').constructor;
-var integration = require('analytics.js-integration');
-var sandbox = require('clear-env');
-var tester = require('analytics.js-integration-tester');
-var Pendo = require('../lib/');
-
-// var noop = function() {};
+var Analytics = require('@segment/analytics.js-core').constructor;
+var Pendo = require('../lib');
+var integration = require('@segment/analytics.js-integration');
+var sandbox = require('@segment/clear-env');
+var tester = require('@segment/analytics.js-integration-tester');
 
 describe('Pendo', function() {
   var analytics;
@@ -30,11 +28,13 @@ describe('Pendo', function() {
     analytics.reset();
     pendo.reset();
     analytics.user().reset();
+    analytics.group().reset();
     sandbox();
   });
 
   it('should have the right settings', function() {
-    analytics.compare(Pendo,
+    analytics.compare(
+      Pendo,
       integration('Pendo')
         .global('pendo')
         .option('apiKey', '')
@@ -67,20 +67,24 @@ describe('Pendo', function() {
 
   describe('after loading', function() {
     beforeEach(function(done) {
-      analytics.once('ready', done);
+      // override the agent loaded message
+      analytics.once('ready', function() {
+        done();
+      });
       analytics.initialize();
-      analytics.page();
     });
 
     describe('#identify', function() {
       beforeEach(function() {
         analytics.spy(window.pendo, 'identify');
+        analytics.stub(window.pendo, 'tellMaster');
       });
 
       it('should identify with the anonymous user id', function() {
         analytics.identify();
         analytics.called(window.pendo.identify);
-        analytics.assert(window.pendo.getVisitorId().indexOf('_PENDO_T_') !== -1);
+
+        analytics.assert(window.pendo.visitorId.indexOf('_PENDO_T_') !== -1);
       });
 
       it('should identify with the given id', function() {
@@ -104,7 +108,11 @@ describe('Pendo', function() {
     });
 
     describe('#group', function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
+        analytics.once('ready', function() {
+          done();
+        });
+        analytics.initialize();
         analytics.spy(window.pendo, 'identify');
       });
 
@@ -113,6 +121,7 @@ describe('Pendo', function() {
         analytics.called(window.pendo.identify);
         analytics.equal(window.pendo.getAccountId(), 'id');
       });
+
       it('should send traits', function() {
         analytics.group({ trait: 'goog' });
         analytics.called(window.pendo.identify);
