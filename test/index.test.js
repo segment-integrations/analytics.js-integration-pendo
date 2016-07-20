@@ -20,7 +20,7 @@ describe('Pendo', function() {
     analytics.use(Pendo);
     analytics.use(tester);
     analytics.add(pendo);
-    analytics.user();     
+    analytics.user();
   });
 
   afterEach(function() {
@@ -33,11 +33,12 @@ describe('Pendo', function() {
   });
 
   it('should have the right settings', function() {
-    analytics.compare(Pendo,
-            integration('Pendo')
-                .global('pendo')
-                .option('apiKey', '')
-        );
+    analytics.compare(
+      Pendo,
+      integration('Pendo')
+        .global('pendo')
+        .option('apiKey', '')
+    );
   });
 
   describe('before loading', function() {
@@ -67,17 +68,10 @@ describe('Pendo', function() {
   describe('after loading', function() {
     beforeEach(function(done) {
       // override the agent loaded message
-      window.self = window.top = {};
       analytics.once('ready', function() {
-        analytics.stub(window.pendo,'tellMaster', function() {
-          // noop
-        });
-        analytics.stub(window.pendo,'listenToMaster', function() {
-          // noop
-        });        
         done();
       });
-      analytics.initialize();  
+      analytics.initialize();
     });
 
     describe('#identify', function() {
@@ -116,16 +110,9 @@ describe('Pendo', function() {
     describe('#group', function() {
       beforeEach(function(done) {
         analytics.once('ready', function() {
-          analytics.stub(window.pendo,'tellMaster', function() {
-              // noop
-          });
-          analytics.stub(window.pendo,'listenToMaster', function() {
-              // noop
-          });
-          window.pendo.stopSendingEvents();
           done();
         });
-        analytics.initialize();  
+        analytics.initialize();
         analytics.spy(window.pendo, 'identify');
       });
 
@@ -134,6 +121,7 @@ describe('Pendo', function() {
         analytics.called(window.pendo.identify);
         analytics.equal(window.pendo.getAccountId(), 'id');
       });
+
       it('should send traits', function() {
         analytics.group({ trait: 'goog' });
         analytics.called(window.pendo.identify);
