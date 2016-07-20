@@ -44,11 +44,13 @@ var customLaunchers = {
   //   browserName: 'internet explorer',
   //   version: '8'
   // },
-  sl_ie_9: {
-    base: 'SauceLabs',
-    browserName: 'internet explorer',
-    version: '9'
-  },
+  // FIXME(ndhoule): Once Karma fixes postMessage issues in 1.x, re-enable this
+  // https://github.com/karma-runner/karma/issues/2239
+  // sl_ie_9: {
+  //   base: 'SauceLabs',
+  //   browserName: 'internet explorer',
+  //   version: '9'
+  // },
   sl_ie_10: {
     base: 'SauceLabs',
     browserName: 'internet explorer',
