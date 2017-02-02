@@ -10,7 +10,7 @@ describe('Pendo', function() {
   var analytics;
   var pendo;
   var options = {
-    apiKey: 'an-id-to-test-with'
+    apiKey: 'PENDO_API_KEY'
   };
 
   beforeEach(function() {
