@@ -38,6 +38,7 @@ describe('Pendo', function() {
       integration('Pendo')
         .global('pendo')
         .option('apiKey', '')
+        .option('bucket', 'cdn.pendo.io')
     );
   });
 
